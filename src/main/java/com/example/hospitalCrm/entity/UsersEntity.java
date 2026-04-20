@@ -5,11 +5,14 @@ import com.example.hospitalCrm.type.Role;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -39,6 +42,13 @@ public class UsersEntity  implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createAt;
+
+    @UpdateTimestamp
+    private LocalDateTime updateAt;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
