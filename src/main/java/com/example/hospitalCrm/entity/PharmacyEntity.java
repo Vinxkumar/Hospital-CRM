@@ -1,7 +1,7 @@
 package com.example.hospitalCrm.entity;
 
 
-import com.example.hospitalCrm.type.MedicineDevliverStatus;
+import com.example.hospitalCrm.type.MedicineDeliverStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -38,7 +38,7 @@ public class PharmacyEntity {
     private LocalDateTime orderCreatedAt;
 
     @Enumerated(EnumType.STRING)
-    private MedicineDevliverStatus deliverStatus;
+    private MedicineDeliverStatus deliverStatus;
 
     private LocalDateTime deliveredAt;
 

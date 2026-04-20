@@ -38,4 +38,8 @@ public class PatientEntity {
 
     @OneToMany(mappedBy = "patient")
     private List<PrescriptionEntity> prescriptions;
+
+    @OneToMany(mappedBy = "patient")
+    private List<PatientCertificatesEntity> patientCertificates;
+
 }
