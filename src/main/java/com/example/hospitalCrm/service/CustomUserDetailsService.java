@@ -2,17 +2,12 @@ package com.example.hospitalCrm.service;
 
 import com.example.hospitalCrm.entity.UsersEntity;
 import com.example.hospitalCrm.respository.UserRepository;
-import com.nimbusds.jose.crypto.opts.UserAuthenticationRequired;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 
 
 @Component
