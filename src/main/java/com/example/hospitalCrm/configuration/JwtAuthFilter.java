@@ -2,7 +2,7 @@ package com.example.hospitalCrm.configuration;
 
 import com.example.hospitalCrm.entity.UsersEntity;
 import com.example.hospitalCrm.respository.UserRepository;
-import com.example.hospitalCrm.service.JwtTokenBuilder;
+import com.example.hospitalCrm.service.JwtUtil;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -24,13 +24,13 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JwtTokenBuilder jwtTokenBuilder;
+    private final JwtUtil jwtTokenBuilder;
     private final UserRepository userRepository;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authToken = request.getHeader("Authorization");
 
-        if(authToken == null || !authToken.startsWith("Bearer")) {
+        if(authToken == null || !authToken.startsWith("Bearer ")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -39,17 +39,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         final String userName = jwtTokenBuilder.getUserName(token);
 
         if(userName !=null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UsersEntity user = userRepository.findByUserName(userName);
+            UsersEntity user = userRepository.findByUserEmail(userName);
             if(user == null) {
                 throw new UsernameNotFoundException("User Name Not Found");
             }
 
             UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                    user.getUsername(), user.getPassword(), null
+                    user.getUsername(), null, user.getAuthorities()
             );
             SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             filterChain.doFilter(request, response);
         }
-
+        filterChain.doFilter(request, response);
     }
 }
