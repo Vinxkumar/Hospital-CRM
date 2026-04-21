@@ -10,6 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.jspecify.annotations.Nullable;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
@@ -29,6 +30,14 @@ public class UsersEntity  implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     private String userName;
 
     private String userPassword;
@@ -41,7 +50,7 @@ public class UsersEntity  implements UserDetails {
     private String userPhone;
 
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.ADMIN;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -52,7 +61,7 @@ public class UsersEntity  implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_"+ getRole()));
     }
 
     @Override
@@ -62,6 +71,6 @@ public class UsersEntity  implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.userName;
+        return this.userEmail;
     }
 }
