@@ -2,6 +2,7 @@ package com.example.hospitalCrm.dtos.UserDto;
 
 
 import com.example.hospitalCrm.type.Role;
+import jakarta.annotation.Nullable;
 import lombok.*;
 
 @Getter
