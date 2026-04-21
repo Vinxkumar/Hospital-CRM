@@ -1,6 +1,7 @@
 package com.example.hospitalCrm.dtos.UserDto;
 
 
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Getter
@@ -10,7 +11,10 @@ import lombok.*;
 @NoArgsConstructor
 public class UpdateUser {
 
+    @NotNull
     private String userEmail;
+
+    private String userName;
     private String userPhone;
 
 }
