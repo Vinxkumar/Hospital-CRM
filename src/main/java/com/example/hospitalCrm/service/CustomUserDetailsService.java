@@ -28,8 +28,6 @@ public class CustomUserDetailsService implements UserDetailsService {
             throw new UsernameNotFoundException("User Not Found");
         }
 
-        return new User(
-                user.getUsername(), user.getUserPassword(), List.of(new SimpleGrantedAuthority("ROLE_PATIENT"))
-        );
+        return user;
     }
 }
