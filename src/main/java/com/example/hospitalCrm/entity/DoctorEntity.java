@@ -6,7 +6,10 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jdk.dynalink.linker.LinkerServices;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -47,5 +50,13 @@ public class DoctorEntity  {
 
     @OneToMany(mappedBy = "doctor")
     private List<DoctorAvailabilityEntity> doctorAvailability;
+
+
+    @CreationTimestamp
+    @Column(updatable = false)
+    private LocalDateTime createAt;
+
+    @UpdateTimestamp
+    private  LocalDateTime updatedAt;
 
 }
