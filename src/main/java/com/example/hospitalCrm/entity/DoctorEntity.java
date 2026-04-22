@@ -8,6 +8,7 @@ import jdk.dynalink.linker.LinkerServices;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.modelmapper.internal.bytebuddy.implementation.bind.MethodDelegationBinder;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -35,6 +36,7 @@ public class DoctorEntity  {
 
     private String doctorQualification;
 
+    @Column(unique = true)
     private String doctorLicenceNo;
 
     private Boolean doctorAvailable;
@@ -42,13 +44,13 @@ public class DoctorEntity  {
     @Enumerated(EnumType.STRING)
     private DoctorDepartment doctorDepartment;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppointmentEntity> appointments;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrescriptionEntity> prescriptions;
 
-    @OneToMany(mappedBy = "doctor")
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DoctorAvailabilityEntity> doctorAvailability;
 
 
