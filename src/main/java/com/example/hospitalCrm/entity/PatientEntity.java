@@ -5,6 +5,7 @@ import com.example.hospitalCrm.type.PatientBloodGroup;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
+import org.hibernate.action.internal.OrphanRemovalAction;
 
 import java.util.List;
 
@@ -21,11 +22,11 @@ public class PatientEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long patientId;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", unique = true, nullable = false  )
     private UsersEntity user;
 
-    @Column(unique = true)
+
     private String emergencyPhone;
 
     private String patientAddress;
@@ -33,13 +34,13 @@ public class PatientEntity {
     @Enumerated(EnumType.STRING)
     private PatientBloodGroup patientBloodGroup;
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<AppointmentEntity> appointments;
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrescriptionEntity> prescriptions;
 
-    @OneToMany(mappedBy = "patient")
+    @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PatientCertificatesEntity> patientCertificates;
 
 }
