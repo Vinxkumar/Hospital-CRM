@@ -48,12 +48,12 @@ public class UserServiceImpl implements UserService {
                 .userPassword(passwordEncoder.encode(userRequest.getPassword()))
                 .userEmail(userRequest.getUserEmail())
                 .userPhone(userRequest.getUserPhone())
-                .role(Role.USER)
+                .role(Role.ADMIN)
                 .build());
 
-        if(newUser ==null) {
-            throw new RuntimeException("User Failed To Create with userEmail: "+userRequest.getUserEmail());
-        }
+//        if(newUser ==null) {
+//            throw new RuntimeException("User Failed To Create with userEmail: "+userRequest.getUserEmail());
+//        }
 
         log.info("Account Created Successfully with UserEmail: {}", newUser.getUserEmail());
 
@@ -65,7 +65,11 @@ public class UserServiceImpl implements UserService {
         }
 
 
-        return new UserResponse(token, LocalDateTime.now());
+        return new UserResponse(token,
+                newUser.getUserName(),
+                newUser.getUserEmail(),
+                newUser.getUserPhone(),
+                LocalDateTime.now());
     }
 
 
@@ -105,15 +109,19 @@ public class UserServiceImpl implements UserService {
 
         UsersEntity updatedUser = userRepository.save(user);
 
-        if(updatedUser == null) throw new RuntimeException("Unable to Update User with UserEmail: "+ updateUser.getUserEmail());
+//        if(updatedUser == null) throw new RuntimeException("Unable to Update User with UserEmail: "+ updateUser.getUserEmail());
 
         log.info("User with UserEmail: {} updated successfully..!", updatedUser.getUsername());
 
-        final String token = jwtUtil.generateToken(updatedUser);
+//        final String token = jwtUtil.generateToken(updatedUser);
 
-        if(token == null) throw new RuntimeException("Unable to Generate Token for User with UserEmail: "+ updateUser.getUserEmail());
+//        if(token == null) throw new RuntimeException("Unable to Generate Token for User with UserEmail: "+ updateUser.getUserEmail());
 
-        return new UserResponse(token, LocalDateTime.now());
+        return new UserResponse("",
+                updatedUser.getUserName(),
+                updatedUser.getUserEmail(),
+                updatedUser.getUserPhone(),
+                LocalDateTime.now());
 
     }
 
@@ -128,10 +136,6 @@ public class UserServiceImpl implements UserService {
     public void deleteUserByUserEmail(String userEmail) {
 
         log.info("Fetching User with UserEmail: {}", userEmail);
-
-        if(!userRepository.existsByUserEmail(userEmail)){
-            throw new UsernameNotFoundException("User not Found with UserEmail: " + userEmail);
-        }
 
         log.warn("Deleting User with UserName: {}", userEmail);
         userRepository.deleteByUserEmail(userEmail);
@@ -152,23 +156,30 @@ public class UserServiceImpl implements UserService {
 
         log.info("Fetching User with UserName: {}", userLogin.getUserEmail());
 
-        if(!userRepository.existsByUserEmail(userLogin.getUserEmail())) {
+        final UsersEntity user = userRepository.findByUserEmail(userLogin.getUserEmail());
+
+        if(user == null) {
             throw new UsernameNotFoundException("User Not Found");
         }
 
         log.info("Verifying Credentials for user with UserName: {}", userLogin.getUserEmail());
 
         if(
-               !passwordEncoder.matches(userLogin.getPassword(), userRepository.findByUserEmail(userLogin.getUserEmail()).getPassword())
+               !passwordEncoder.matches(userLogin.getPassword(), user.getPassword())
         ) {
             throw new RuntimeException("Invalid Credentials...!");
         }
 
-        final String token = jwtUtil.generateToken(userRepository.findByUserEmail(userLogin.getUserEmail()));
+        final String token = jwtUtil.generateToken(user);
 
+        log.info("Generating Token for User: {}", user.getUserName());
 
+        return new UserResponse(token,
 
-        return new UserResponse(token, LocalDateTime.now());
+                user.getUserName(),
+                user.getUserEmail(),
+                user.getUserPhone(),
+                LocalDateTime.now());
 
     }
 
