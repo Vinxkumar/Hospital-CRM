@@ -12,8 +12,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserResponse {
 
-    @NotNull
     private String jwtToken;
+    private String userName;
+    private String userEmail;
+    private String userPhone;
+
     private LocalDateTime responseAt;
+
 
 }
