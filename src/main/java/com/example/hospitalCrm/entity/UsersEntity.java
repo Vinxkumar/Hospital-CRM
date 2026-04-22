@@ -50,7 +50,7 @@ public class UsersEntity  implements UserDetails {
     private String userPhone;
 
     @Enumerated(EnumType.STRING)
-    private Role role = Role.ADMIN;
+    private Role role;
 
     @CreationTimestamp
     @Column(updatable = false)
@@ -61,7 +61,7 @@ public class UsersEntity  implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_"+ getRole()));
+        return List.of(new SimpleGrantedAuthority("ROLE_"+ getRole().name()));
     }
 
     @Override
