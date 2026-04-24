@@ -1,6 +1,6 @@
 package com.example.hospitalCrm.dtos.DoctorDto;
 
-import com.example.hospitalCrm.dtos.DoctorAvailabilityDto.DoctorAvailabilityResponse;
+
 import lombok.*;
 
 import java.util.List;

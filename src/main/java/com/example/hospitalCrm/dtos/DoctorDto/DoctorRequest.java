@@ -1,8 +1,6 @@
 package com.example.hospitalCrm.dtos.DoctorDto;
 
 
-import com.example.hospitalCrm.dtos.DoctorAvailabilityDto.DoctorAvailabilityResponse;
-
 import com.example.hospitalCrm.dtos.UserDto.UserRequest;
 import com.example.hospitalCrm.type.DoctorDepartment;
 import jakarta.persistence.*;
@@ -33,6 +31,5 @@ public class DoctorRequest {
     @Enumerated(EnumType.STRING)
     private DoctorDepartment doctorDepartment;
 
-    private List<DoctorAvailabilityResponse> doctorAvailability;
 
 }
