@@ -48,7 +48,7 @@ public class UserServiceImpl implements UserService {
                 .userPassword(passwordEncoder.encode(userRequest.getPassword()))
                 .userEmail(userRequest.getUserEmail())
                 .userPhone(userRequest.getUserPhone())
-                .role(Role.ADMIN)
+                .role(Role.USER)
                 .build());
 
 //        if(newUser ==null) {
