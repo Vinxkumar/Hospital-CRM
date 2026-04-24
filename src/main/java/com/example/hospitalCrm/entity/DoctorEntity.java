@@ -50,10 +50,6 @@ public class DoctorEntity  {
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrescriptionEntity> prescriptions;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DoctorAvailabilityEntity> doctorAvailability;
-
-
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createAt;
