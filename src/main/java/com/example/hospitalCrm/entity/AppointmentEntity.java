@@ -3,8 +3,11 @@ package com.example.hospitalCrm.entity;
 import com.example.hospitalCrm.type.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Getter
@@ -23,7 +26,15 @@ public class AppointmentEntity {
     @JoinColumn(name="patient_id")
     private PatientEntity patient;
 
-    private LocalDateTime appointmentDataAndTime;
+
+    private LocalDate appointmentDate;
+
+    private LocalTime startTime;
+
+    private LocalTime endTime;
+
+    @CreationTimestamp
+    private LocalDateTime appointmentCreatedAt;
 
     private String message;
 
