@@ -1,7 +1,10 @@
 package com.example.hospitalCrm.respository;
 
+import com.example.hospitalCrm.entity.AppointmentEntity;
 import com.example.hospitalCrm.entity.DoctorEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.List;
 
 public interface DoctorRepository extends JpaRepository<DoctorEntity, Long> {
 
@@ -15,4 +18,5 @@ public interface DoctorRepository extends JpaRepository<DoctorEntity, Long> {
 
     void deleteByDoctorLicenceNo(String doctorLicenceNo);
     void deleteByDoctorId(Long id);
+
 }
