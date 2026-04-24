@@ -75,6 +75,11 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         final AppointmentEntity savedAppointment = appointmentRespository.save(appointment);
 
+        // for bidirectional access of Appointments
+        doctor.setAppointments(List.of(appointment));
+        doctorRepository.save(doctor);
+
+        log.info("Appointment Created Successfully");
         return mapToAppointmentResponse(savedAppointment);
     }
 
@@ -130,6 +135,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
 //        appointment.setAppointmentStatus(Ap);
         final AppointmentEntity updatedAppointment = appointmentRespository.save(appointment);
+
 
         return mapToAppointmentResponse(updatedAppointment);
     }
