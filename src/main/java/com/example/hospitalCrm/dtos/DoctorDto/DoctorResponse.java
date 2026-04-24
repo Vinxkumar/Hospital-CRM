@@ -30,5 +30,4 @@ public class DoctorResponse {
 
     private Boolean doctorAvailable;
 
-//    private List<DoctorAvailabilityResponse> doctorAvailability;
 }
