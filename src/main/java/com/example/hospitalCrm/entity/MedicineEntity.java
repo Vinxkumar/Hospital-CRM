@@ -3,6 +3,7 @@ package com.example.hospitalCrm.entity;
 
 import com.example.hospitalCrm.type.MedicineCategory;
 
+import com.example.hospitalCrm.type.MedicineDosageForm;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,13 +36,12 @@ public class MedicineEntity {
     @Enumerated(EnumType.STRING)
     private List<MedicineCategory> category;
 
+    @Enumerated(EnumType.STRING)
+    private MedicineDosageForm medicineDosageForm;
+
     private String medicineManufacturer;
 
-    private LocalDate medicineExpireData;
-
-    private Long medicineStockInNumber;
-
-    private Long medicinePerUnitPrice;
+    private String strengthMg_Ml;
 
     @Column(updatable = false)
     @CreationTimestamp
@@ -49,13 +49,5 @@ public class MedicineEntity {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-
-
-    @PrePersist
-    protected void onCreate() {
-        this.createAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-    }
 
 }
