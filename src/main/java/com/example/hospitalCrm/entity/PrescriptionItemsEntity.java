@@ -33,5 +33,4 @@ public class PrescriptionItemsEntity {
 
     private String doctorNote;
 
-
 }
