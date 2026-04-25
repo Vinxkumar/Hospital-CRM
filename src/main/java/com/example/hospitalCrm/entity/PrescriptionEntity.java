@@ -36,6 +36,8 @@ public class PrescriptionEntity {
 
     private LocalDateTime issuedAt;
 
+    private boolean editable;
+
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrescriptionItemsEntity> prescriptionItems;
 
