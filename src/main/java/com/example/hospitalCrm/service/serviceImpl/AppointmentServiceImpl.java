@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AppointmentServiceImpl implements AppointmentService {
 
-    private  final PatientRepository patientRepository;
+    private final PatientRepository patientRepository;
     private final AppointmentRespository appointmentRespository;
     private final DoctorRepository doctorRepository;
 
@@ -46,9 +46,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
         log.info("Fetching Availability of Doctor with Id: {}", request.getDoctorId());
 
-        boolean validSlot = doctor.getDoctorAvailable();
-
-        if (!validSlot) {
+        if (!doctor.getDoctorAvailable()) {
             throw new RuntimeException("Doctor not available");
         }
 
@@ -68,16 +66,15 @@ public class AppointmentServiceImpl implements AppointmentService {
         log.info("Creating Appointment for Patient with Id: {} with Doctor with Id: {} ", patientId, request.getDoctorId());
 
         AppointmentEntity appointment = mapToEntity(request);
-
         appointment.setPatient(patient);
         appointment.setDoctor(doctor);
         appointment.setAppointmentStatus(AppointmentStatus.BOOKED);
 
         final AppointmentEntity savedAppointment = appointmentRespository.save(appointment);
 
-        // for bidirectional access of Appointments
-        doctor.setAppointments(List.of(appointment));
-        doctorRepository.save(doctor);
+        // Add to existing lists — never replace with List.of()
+        doctor.getAppointments().add(savedAppointment);
+        patient.getAppointments().add(savedAppointment);
 
         log.info("Appointment Created Successfully");
         return mapToAppointmentResponse(savedAppointment);
@@ -87,55 +84,49 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Override
     public AppointmentResponse updateAppointment(Long patientId, Long appointmentId, AppointmentUpdateRequest appointmentUpdateRequest) {
 
-        log.info("Fetching Doctor with Id: {} appointed with Patient with Id; {} For Appointment with Id: {}", appointmentUpdateRequest.getDoctorId(), patientId, appointmentId);
+        log.info("Fetching Doctor with Id: {} appointed with Patient with Id: {} For Appointment with Id: {}",
+                appointmentUpdateRequest.getDoctorId(), patientId, appointmentId);
 
-        AppointmentEntity appointment = appointmentRespository.findByAppointmentIdAndPatientPatientIdAndDoctorDoctorId(appointmentId, patientId, appointmentUpdateRequest.getDoctorId());
+        AppointmentEntity appointment = appointmentRespository
+                .findByAppointmentIdAndPatientPatientIdAndDoctorDoctorId(
+                        appointmentId, patientId, appointmentUpdateRequest.getDoctorId());
 
-        if(appointment == null) {
+        if (appointment == null) {
             throw new RuntimeException("Appointment Not Found for Patient Id: " + patientId);
         }
 
-        log.info("Fecthing Doctor Availability for the provided Appointment Time Slot");
+        log.info("Fetching Doctor Availability for the provided Appointment Time Slot");
 
-        if(!appointment.getDoctor().getDoctorAvailable()) {
+        if (!appointment.getDoctor().getDoctorAvailable()) {
             throw new RuntimeException("Doctor Not Available at this Time Slot");
         }
 
-        log.info("Fetching Appointment Availability time Slot ");
+        log.info("Fetching Appointment Availability Time Slot");
 
-        if(appointmentRespository.existsOverlap(
+        if (appointmentRespository.existsOverlap(
                 appointmentUpdateRequest.getDoctorId(),
                 appointmentUpdateRequest.getAppointmentDate(),
                 appointmentUpdateRequest.getStartTime(),
                 appointmentUpdateRequest.getEndTime()
-
         )) {
-            throw new RuntimeException("Slot Already Booked ");
+            throw new RuntimeException("Slot Already Booked");
         }
 
-        if(
-                !appointmentUpdateRequest.getAppointmentDate().equals(appointment.getAppointmentDate())
-        ) {
-                appointment.setAppointmentDate(appointmentUpdateRequest.getAppointmentDate());
+        if (!appointmentUpdateRequest.getAppointmentDate().equals(appointment.getAppointmentDate())) {
+            appointment.setAppointmentDate(appointmentUpdateRequest.getAppointmentDate());
         }
 
-        if(
-                !appointmentUpdateRequest.getStartTime().equals(appointment.getStartTime())
-        ) {
+        if (!appointmentUpdateRequest.getStartTime().equals(appointment.getStartTime())) {
             appointment.setStartTime(appointmentUpdateRequest.getStartTime());
         }
 
-        if(
-                !appointmentUpdateRequest.getEndTime().equals(appointment.getEndTime())
-        ) {
+        if (!appointmentUpdateRequest.getEndTime().equals(appointment.getEndTime())) {
             appointment.setEndTime(appointmentUpdateRequest.getEndTime());
         }
 
         log.info("Updating Appointment with Id: {} for Patient with Id: {}", appointmentId, patientId);
 
-//        appointment.setAppointmentStatus(Ap);
         final AppointmentEntity updatedAppointment = appointmentRespository.save(appointment);
-
 
         return mapToAppointmentResponse(updatedAppointment);
     }
@@ -144,56 +135,55 @@ public class AppointmentServiceImpl implements AppointmentService {
     public List<AppointmentResponse> listAllAppointments(Long patientId) {
         log.info("Fetching Patient With Id: {}", patientId);
 
-        if(!patientRepository.existsById(patientId)) {
+        if (!patientRepository.existsById(patientId)) {
             throw new UsernameNotFoundException("Patient Not Found with Id: " + patientId);
         }
 
         return mapToAppointmentResponseList(appointmentRespository.findByPatientPatientId(patientId));
-
-//        return List.of();
-
     }
 
     @Override
     public AppointmentResponse fetchAppointmentById(Long patientId, Long appointmentId) {
-        log.info("Fetching Appointment with Id: {} for Patient with Id: {}",appointmentId, patientId);
+        log.info("Fetching Appointment with Id: {} for Patient with Id: {}", appointmentId, patientId);
 
-        final AppointmentEntity appointment = appointmentRespository.findByAppointmentIdAndPatientPatientId(appointmentId, patientId);
+        final AppointmentEntity appointment = appointmentRespository
+                .findByAppointmentIdAndPatientPatientId(appointmentId, patientId);
 
-        if(appointment == null) {
+        if (appointment == null) {
             throw new RuntimeException("Appointment or Patient not Found");
         }
 
-        return mapToAppointmentResponse(appointmentRespository.findByAppointmentIdAndPatientPatientId(appointmentId, patientId));
+        return mapToAppointmentResponse(appointment);
     }
 
     @Transactional
     @Override
     public AppointmentResponse cancelAppointment(Long patientId, Long appointmentId) {
-        log.info("Fetching Appointment with Id: {} for Patient with Id: {}",appointmentId, patientId);
-        AppointmentEntity appointment = appointmentRespository.findByAppointmentIdAndPatientPatientId(appointmentId, patientId);
+        log.info("Fetching Appointment with Id: {} for Patient with Id: {}", appointmentId, patientId);
 
-        if(appointment == null) {
+        AppointmentEntity appointment = appointmentRespository
+                .findByAppointmentIdAndPatientPatientId(appointmentId, patientId);
+
+        if (appointment == null) {
             throw new RuntimeException("Either Appointment or Patient not Found");
         }
 
-
         log.info("Updating Appointment Status to Canceled");
 
-        if(appointment.getAppointmentStatus().equals(AppointmentStatus.VISIT_COMPLETE)) {
-            throw new IllegalArgumentException("Cannot Cancel Appointment ");
+        if (appointment.getAppointmentStatus().equals(AppointmentStatus.VISIT_COMPLETE)) {
+            throw new IllegalArgumentException("Cannot Cancel a Completed Appointment");
         }
 
         appointment.setAppointmentStatus(AppointmentStatus.CANCELED);
 
-        final AppointmentEntity savedAppointment = appointmentRespository.save(appointment);
+        appointmentRespository.save(appointment);
 
         return mapToAppointmentResponse(appointment);
     }
 
 
-
     // mappers
+
     protected AppointmentEntity mapToEntity(AppointmentRequest request) {
         return AppointmentEntity.builder()
                 .appointmentDate(request.getAppointmentDate())
@@ -219,9 +209,8 @@ public class AppointmentServiceImpl implements AppointmentService {
     }
 
     protected List<AppointmentResponse> mapToAppointmentResponseList(List<AppointmentEntity> appointmentEntities) {
-        return appointmentEntities.stream().map(
-                appointment -> mapToAppointmentResponse(appointment)
-        ).toList();
+        return appointmentEntities.stream()
+                .map(this::mapToAppointmentResponse)
+                .toList();
     }
-
 }
