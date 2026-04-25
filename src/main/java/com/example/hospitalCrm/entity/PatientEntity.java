@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.hibernate.action.internal.OrphanRemovalAction;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,10 +36,10 @@ public class PatientEntity {
     private PatientBloodGroup patientBloodGroup;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<AppointmentEntity> appointments;
+    private List<AppointmentEntity> appointments = new ArrayList<>();
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PrescriptionEntity> prescriptions;
+    private List<PrescriptionEntity> prescriptions = new ArrayList<>();
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PatientCertificatesEntity> patientCertificates;
