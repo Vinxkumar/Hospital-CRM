@@ -1,4 +1,4 @@
-package com.example.hospitalCrm.configuration;
+package com.example.hospitalCrm.utils;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
