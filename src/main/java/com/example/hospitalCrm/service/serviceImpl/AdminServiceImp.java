@@ -1,6 +1,6 @@
 package com.example.hospitalCrm.service.serviceImpl;
 
-import com.example.hospitalCrm.configuration.ModelMapperConfig;
+import com.example.hospitalCrm.utils.ModelMapperConfig;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorRequest;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorResponse;
 import com.example.hospitalCrm.dtos.PatientDto.PatientRequest;
