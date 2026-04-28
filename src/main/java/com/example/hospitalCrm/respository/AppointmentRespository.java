@@ -3,11 +3,14 @@ package com.example.hospitalCrm.respository;
 import com.example.hospitalCrm.entity.AppointmentEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+
+@Repository
 public interface AppointmentRespository extends JpaRepository<AppointmentEntity, Long> {
 
     @Query("""
@@ -22,6 +25,7 @@ public interface AppointmentRespository extends JpaRepository<AppointmentEntity,
     AppointmentEntity findByAppointmentIdAndPatientPatientId(Long appointmentId, Long patientId);
 
     AppointmentEntity findByAppointmentIdAndPatientPatientIdAndDoctorDoctorId(Long appointmentId, Long patientId, Long doctorId);
+    Boolean existsByAppointmentIdAndPatientPatientIdAndDoctorDoctorId(Long appointmentId, Long patientId, Long doctorId);
 
     List<AppointmentEntity> findByPatientPatientId(Long patientId);
 
