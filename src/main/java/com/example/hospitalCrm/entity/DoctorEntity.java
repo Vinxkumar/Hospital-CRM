@@ -26,7 +26,7 @@ public class DoctorEntity  {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long doctorId;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", unique = true, nullable = false)
     private UsersEntity user;
 
@@ -44,10 +44,10 @@ public class DoctorEntity  {
     @Enumerated(EnumType.STRING)
     private DoctorDepartment doctorDepartment;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<AppointmentEntity> appointments;
 
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<PrescriptionEntity> prescriptions;
 
     @CreationTimestamp

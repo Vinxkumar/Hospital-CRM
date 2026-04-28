@@ -17,11 +17,11 @@ public class PrescriptionItemsEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long prescriptionItemId;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prescription_id")
     private PrescriptionEntity prescription;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "medicine_id")
     private MedicineEntity medicine;
 
