@@ -1,6 +1,13 @@
 package com.example.hospitalCrm.dtos.PrescriptionItemsDto;
 
 
+import lombok.*;
+
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PrescriptionItemsResponse {
 
     private String medicineName;
