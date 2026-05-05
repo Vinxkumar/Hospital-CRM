@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -21,17 +22,15 @@ public class PharmacyEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long pharmacyId;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", unique = true, nullable = false)
-    private UsersEntity user;
 
     @ManyToOne
-    @JoinColumn(name = "patient_id", unique = true, nullable = false)
-    private PatientEntity patient;
-
-    @OneToOne
     @JoinColumn(name = "prescription_id", unique = true, nullable = false)
     private PrescriptionEntity prescription;
+
+
+//    @OneToMany(mappedBy = "pharmacy")
+//    private List<MedicineInventory> medicineInventoryList;
+
 
     @CreationTimestamp
     @Column(updatable = false)
