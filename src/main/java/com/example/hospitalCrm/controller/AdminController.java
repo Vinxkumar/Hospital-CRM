@@ -3,9 +3,10 @@ package com.example.hospitalCrm.controller;
 
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorRequest;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorResponse;
+import com.example.hospitalCrm.dtos.MedicineDto.AddMedicineRequest;
+import com.example.hospitalCrm.dtos.MedicineDto.MedicineResponse;
 import com.example.hospitalCrm.dtos.PatientDto.PatientRequest;
 import com.example.hospitalCrm.dtos.PatientDto.PatientResponse;
-import com.example.hospitalCrm.dtos.PharmacyDto.PharmactResponse;
 import com.example.hospitalCrm.dtos.UserDto.UserRequest;
 import com.example.hospitalCrm.dtos.UserDto.UserResponse;
 import com.example.hospitalCrm.service.serviceImpl.AdminServiceImp;
@@ -13,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,28 +27,41 @@ public class AdminController {
 
     private final AdminServiceImp adminService;
 
+
+    //Post Mapping
+
     @PostMapping("/new/account")
     public ResponseEntity<UserResponse> createNewAdminAccount(@RequestBody UserRequest userRequest) {
 
-        log.info("REST: request for creating new Admin Account");
+        log.warn("REST: request for creating new Admin Account");
         return ResponseEntity.ok(adminService.createNewAdminUser(userRequest));
     }
 
     @PostMapping("/new/doctor")
     public ResponseEntity<DoctorResponse> createNewDoctorAccount(@RequestBody DoctorRequest doctorRequest) {
 
-        log.info("REST: request for creating new Doctor Account");
+        log.warn("REST: request for creating new Doctor Account");
         return ResponseEntity.ok(adminService.createNewDoctor(doctorRequest));
     }
 
     @PostMapping("/new/patient")
     public ResponseEntity<PatientResponse> createNewPatientAccount(@RequestBody PatientRequest patientRequest) {
 
-        log.info("REST: request to create new Patient Account");
+        log.warn("REST: request to create new Patient Account");
         return ResponseEntity.ok(adminService.createNewPatient(patientRequest));
     }
 
+    @PostMapping("{id}/new/medicine")
+    public ResponseEntity<MedicineResponse> addNewMedicine(@PathVariable Long id, @RequestBody AddMedicineRequest addMedicineRequest) {
 
+        log.warn("REST: Request to Add Medicine By Admin with Id: {}", id);
+
+        return ResponseEntity.ok(adminService.addMedicine(id, addMedicineRequest));
+    }
+
+
+
+    // Get Mapping
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponse> fetchAdminById(@PathVariable Long id) {
@@ -77,7 +90,22 @@ public class AdminController {
         return ResponseEntity.ok(adminService.fetchByPharmaId(id));
     }
 
+    @GetMapping("{adminId}/medicine/{medId}")
+    public ResponseEntity<MedicineResponse>  fetchByMedId(@PathVariable Long adminId, Long medId) {
 
+        log.info("REST: request to fetch Medicine with Id: {} by Admin with Id: {}", medId, adminId);
+
+        return ResponseEntity.ok(adminService.fetchByMedicineId(adminId, medId));
+
+    }
+
+    @GetMapping("{adminId}/medicine/all")
+    public ResponseEntity<List<MedicineResponse>> fetchAllMedicne(@PathVariable Long adminId) {
+
+        log.info("REST: request to list all medicines by Admin with Id: {}",adminId);
+
+        return ResponseEntity.ok(adminService.fetchAllMedicine(adminId));
+    }
 
     @GetMapping("/all")
     public ResponseEntity<List<UserRequest>> listAllAdminUsers() {
@@ -112,6 +140,8 @@ public class AdminController {
 
 
 
+    // Delet Mapping
+
     @DeleteMapping("/{adminId}")
     public ResponseEntity<String> deleteByAdminId(@PathVariable Long adminId) {
         log.warn("REST: request to Delete Admin with Id: {}", adminId);
@@ -145,6 +175,15 @@ public class AdminController {
 //
 //        adminService.deleteP
 //    }
+
+    @DeleteMapping("{adminId}/medicine/{medicineId}")
+    public ResponseEntity<String> deleteByMedicineId(@PathVariable Long adminId, @PathVariable Long medicineId) {
+
+        log.warn("REST: request to delete Medicine with Id: {} by Admin with Id: {}", medicineId, adminId);
+        adminService.removeMedicine(adminId, medicineId);
+        return ResponseEntity.ok("Medicine with Id" + medicineId + " Deleted Successfully");
+    }
+
 
     @DeleteMapping("/all")
     public ResponseEntity<String > deleteAllAdmin() {
