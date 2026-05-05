@@ -42,4 +42,7 @@ public class PrescriptionEntity {
     @OneToMany(mappedBy = "prescription", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PrescriptionItemsEntity> prescriptionItems;
 
+    @OneToOne(mappedBy = "prescription")
+    private PrescriptionBill prescriptionBill;
+
 }
