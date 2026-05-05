@@ -45,16 +45,14 @@ public class securityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-//                .cors(AbstractHttpConfigurer :: disable)
+                .cors(config -> corsConfigurationSource())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessinConfig -> sessinConfig.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().permitAll()
-//                                .requestMatchers("/api/auth/**").permitAll()
-//                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-//                                .requestMatchers("/api/patient/**").hasRole("PATIENT")
-//                                .requestMatchers("/api/auth/**").permitAll()
-//                                .anyRequest().authenticated()
+                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/patient/**").hasRole("PATIENT")
+                                .requestMatchers("/api/auth/**").permitAll()
+                                .anyRequest().authenticated()
                 ).addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
 
 
