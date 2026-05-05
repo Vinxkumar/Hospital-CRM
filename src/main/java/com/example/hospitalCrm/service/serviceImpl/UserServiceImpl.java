@@ -69,6 +69,7 @@ public class UserServiceImpl implements UserService {
                 newUser.getUserName(),
                 newUser.getUserEmail(),
                 newUser.getUserPhone(),
+                newUser.getRole(),
                 LocalDateTime.now());
     }
 
@@ -121,6 +122,7 @@ public class UserServiceImpl implements UserService {
                 updatedUser.getUserName(),
                 updatedUser.getUserEmail(),
                 updatedUser.getUserPhone(),
+                updatedUser.getRole(),
                 LocalDateTime.now());
 
     }
@@ -179,6 +181,7 @@ public class UserServiceImpl implements UserService {
                 user.getUserName(),
                 user.getUserEmail(),
                 user.getUserPhone(),
+                user.getRole(),
                 LocalDateTime.now());
 
     }

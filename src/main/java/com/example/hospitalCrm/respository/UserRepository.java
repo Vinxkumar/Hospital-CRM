@@ -29,7 +29,7 @@ public interface UserRepository extends JpaRepository<UsersEntity, Long> {
     void deleteByUserPhone(String userPhone);
 
 
-    @Query("select u.userName as userName, u.userEmail as userEmail, u.userPhone as userPhone from UsersEntity u where u.id= :id and  u.role = :role ")
+    @Query("select u.userName as userName, u.userEmail as userEmail, u.userPhone as userPhone, u.role as role from UsersEntity u where u.id= :id and  u.role = :role ")
     UserProject findByUserRole(@Param("id") Long id, @Param("role") Role role);
 
 
