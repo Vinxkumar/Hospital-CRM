@@ -48,4 +48,7 @@ public class AppointmentEntity {
     @OneToOne(mappedBy = "appointment")
     private PrescriptionEntity prescription;
 
+    @OneToOne(mappedBy = "appointment")
+    private PrescriptionBill prescriptionBill;
+
 }
