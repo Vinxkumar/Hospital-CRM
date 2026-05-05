@@ -2,6 +2,9 @@ package com.example.hospitalCrm.service;
 
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorRequest;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorResponse;
+import com.example.hospitalCrm.dtos.MedicineDto.AddMedicineRequest;
+import com.example.hospitalCrm.dtos.MedicineDto.MedicineResponse;
+import com.example.hospitalCrm.dtos.MedicineInventoryDto.UpdateInventoryRequest;
 import com.example.hospitalCrm.dtos.PatientDto.PatientRequest;
 import com.example.hospitalCrm.dtos.PatientDto.PatientResponse;
 import com.example.hospitalCrm.dtos.UserDto.UserRequest;
@@ -34,4 +37,11 @@ public interface AdminService {
     void deleteAllDoctors();
     void deleteAllPharma();
     void deleteAllPatients();
+
+    MedicineResponse addMedicine(Long adminId, AddMedicineRequest addMedicineRequest);
+    MedicineResponse updateMedicine(Long adminId, Long medicineId, UpdateInventoryRequest updateInventoryRequest);
+    MedicineResponse fetchByMedicineId(Long adminId, Long medicineId);
+    List<MedicineResponse> fetchAllMedicine(Long adminId);
+    void removeMedicine(Long adminId, Long medicineId);
+    void removeAllMedicine(Long adminId);
 }
