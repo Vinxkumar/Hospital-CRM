@@ -47,6 +47,9 @@ public class MedicineEntity {
     @CreationTimestamp
     private LocalDateTime createAt;
 
+    @OneToOne(mappedBy = "medicine")
+    private MedicineInventory medicineInventories;
+
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
