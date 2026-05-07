@@ -27,7 +27,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     private final PrescriptionItemsRepository prescriptionItemsRepository;
     private final AppointmentRespository appointmentRespository;
     private final PrescriptionRepository prescriptionRepository;
-    private final MedicineRespository medicineRespository;
+    private final MedicineRepository medicineRepository;
 
 
     @Override
@@ -72,7 +72,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
             PrescriptionItemsEntity prescriptionItem = PrescriptionItemsEntity.builder()
                     .prescription(newPrescription)
                     .prescriptionFrequency(prescriptionItemRequest.getPrescriptionFrequency())
-                    .medicine(medicineRespository.findById(prescriptionItemRequest.getMedicineId()).orElseThrow(
+                    .medicine(medicineRepository.findById(prescriptionItemRequest.getMedicineId()).orElseThrow(
                             () -> new UsernameNotFoundException("Medicine With This Id not not Found")
                     ))
                     .prescriptionDurationInDays(prescriptionItemRequest.getPrescriptionDurationInDays())
