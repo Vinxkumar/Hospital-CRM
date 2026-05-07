@@ -1,8 +1,10 @@
 package com.example.hospitalCrm.controller;
 
 
+import com.example.hospitalCrm.configuration.GetCurrentUser;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorRequest;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorResponse;
+import com.example.hospitalCrm.dtos.KeyMetricsResponse;
 import com.example.hospitalCrm.dtos.MedicineDto.AddMedicineRequest;
 import com.example.hospitalCrm.dtos.MedicineDto.MedicineResponse;
 import com.example.hospitalCrm.dtos.PatientDto.PatientRequest;
@@ -26,7 +28,7 @@ import java.util.List;
 public class AdminController {
 
     private final AdminServiceImp adminService;
-
+    private final GetCurrentUser currentUser;
 
     //Post Mapping
 
@@ -41,22 +43,23 @@ public class AdminController {
     public ResponseEntity<DoctorResponse> createNewDoctorAccount(@RequestBody DoctorRequest doctorRequest) {
 
         log.warn("REST: request for creating new Doctor Account");
-        return ResponseEntity.ok(adminService.createNewDoctor(doctorRequest));
+
+        return ResponseEntity.ok(adminService.createNewDoctor(currentUser.getCurrentId(), doctorRequest));
     }
 
     @PostMapping("/new/patient")
     public ResponseEntity<PatientResponse> createNewPatientAccount(@RequestBody PatientRequest patientRequest) {
 
-        log.warn("REST: request to create new Patient Account");
-        return ResponseEntity.ok(adminService.createNewPatient(patientRequest));
+        log.warn("REST: request to create new Patient Account by Admin with Id: {}", currentUser.getCurrentId());
+        return ResponseEntity.ok(adminService.createNewPatient(currentUser.getCurrentId(), patientRequest));
     }
 
-    @PostMapping("{id}/new/medicine")
-    public ResponseEntity<MedicineResponse> addNewMedicine(@PathVariable Long id, @RequestBody AddMedicineRequest addMedicineRequest) {
+    @PostMapping("/new/medicine")
+    public ResponseEntity<MedicineResponse> addNewMedicine(@RequestBody AddMedicineRequest addMedicineRequest) {
 
-        log.warn("REST: Request to Add Medicine By Admin with Id: {}", id);
+        log.warn("REST: Request to Add Medicine By Admin with Id: {}", currentUser.getCurrentId());
 
-        return ResponseEntity.ok(adminService.addMedicine(id, addMedicineRequest));
+        return ResponseEntity.ok(adminService.addMedicine(currentUser.getCurrentId(), addMedicineRequest));
     }
 
 
@@ -90,21 +93,21 @@ public class AdminController {
         return ResponseEntity.ok(adminService.fetchByPharmaId(id));
     }
 
-    @GetMapping("{adminId}/medicine/{medId}")
-    public ResponseEntity<MedicineResponse>  fetchByMedId(@PathVariable Long adminId, Long medId) {
+    @GetMapping("/medicine/{medId}")
+    public ResponseEntity<MedicineResponse>  fetchByMedId(@PathVariable Long medId) {
 
-        log.info("REST: request to fetch Medicine with Id: {} by Admin with Id: {}", medId, adminId);
+        log.info("REST: request to fetch Medicine with Id: {} by Admin with Id: {}", medId, currentUser.getCurrentId());
 
-        return ResponseEntity.ok(adminService.fetchByMedicineId(adminId, medId));
+        return ResponseEntity.ok(adminService.fetchByMedicineId(currentUser.getCurrentId(), medId));
 
     }
 
-    @GetMapping("{adminId}/medicine/all")
-    public ResponseEntity<List<MedicineResponse>> fetchAllMedicne(@PathVariable Long adminId) {
+    @GetMapping("/medicine/all")
+    public ResponseEntity<List<MedicineResponse>> fetchAllMedicine() {
 
-        log.info("REST: request to list all medicines by Admin with Id: {}",adminId);
+        log.info("REST: request to list all medicines by Admin with Id: {}",currentUser.getCurrentId());
 
-        return ResponseEntity.ok(adminService.fetchAllMedicine(adminId));
+        return ResponseEntity.ok(adminService.fetchAllMedicine(currentUser.getCurrentId()));
     }
 
     @GetMapping("/all")
@@ -169,18 +172,13 @@ public class AdminController {
         return ResponseEntity.ok("Deleted Patient with Id");
     }
 
-//    @DeleteMapping("/pharma/{pharmaId}")
-//    public ResponseEntity<String> deleteByPharmaId(@PathVariable Long pharmaId) {
-//        log.warn("REST: request to delete PharmaStaff with Id: {}", pharmaId);
-//
-//        adminService.deleteP
-//    }
 
-    @DeleteMapping("{adminId}/medicine/{medicineId}")
-    public ResponseEntity<String> deleteByMedicineId(@PathVariable Long adminId, @PathVariable Long medicineId) {
 
-        log.warn("REST: request to delete Medicine with Id: {} by Admin with Id: {}", medicineId, adminId);
-        adminService.removeMedicine(adminId, medicineId);
+    @DeleteMapping("/medicine/{medicineId}")
+    public ResponseEntity<String> deleteByMedicineId(@PathVariable Long medicineId) {
+
+        log.warn("REST: request to delete Medicine with Id: {} by Admin with Id: {}", medicineId, currentUser.getCurrentId());
+        adminService.removeMedicine(currentUser.getCurrentId(), medicineId);
         return ResponseEntity.ok("Medicine with Id" + medicineId + " Deleted Successfully");
     }
 
@@ -213,12 +211,22 @@ public class AdminController {
     }
 
     @DeleteMapping("/pharma/all")
-    public ResponseEntity<String> deleteAllPharam() {
+    public ResponseEntity<String> deleteAllPharma() {
         log.warn("REST: request to delete all Pharma Users");
 
         adminService.deleteAllPharma();
 
         return ResponseEntity.ok("Deleted All Pharma Staffs");
     }
+
+
+    @GetMapping("/keyMetrics")
+    public ResponseEntity<KeyMetricsResponse> response() {
+
+        log.info("REST: request for KeyMetrics from FrontEnd");
+
+        return ResponseEntity.ok(adminService.keyMetricsResponse());
+    }
+
 
 }
