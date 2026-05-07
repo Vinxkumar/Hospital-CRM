@@ -19,4 +19,5 @@ public class PrescriptionItemsResponse {
     private Long prescriptionDurationInDays;
 
     private String doctorNote;
+
 }
