@@ -83,7 +83,7 @@ public class AdminServiceImp implements AdminService {
 
     @Transactional
     @Override
-    public DoctorResponse createNewDoctor(DoctorRequest doctorRequest) {
+    public DoctorResponse createNewDoctor(Long adminId, DoctorRequest doctorRequest) {
 
         log.info("Fetching User with UserEmail: {}", doctorRequest.getUser().getUserEmail());
 
@@ -133,8 +133,10 @@ public class AdminServiceImp implements AdminService {
 
     }
 
+
+
     @Override
-    public UserResponse createNewPharma(UserRequest userRequest) {
+    public UserResponse createNewPharma(Long adminId,UserRequest userRequest) {
         if(userRepository.existsByUserEmail(userRequest.getUserEmail())) {
             throw new RuntimeException("User Already Registered with this Email: " + userRequest.getUserEmail());
         }
@@ -160,7 +162,7 @@ public class AdminServiceImp implements AdminService {
 
     @Transactional
     @Override
-    public PatientResponse createNewPatient(PatientRequest patientRequest) {
+    public PatientResponse createNewPatient(Long adminId, PatientRequest patientRequest) {
 
         log.info("Fetching User with UserEmail: {}",patientRequest.getUser().getUserEmail());
 
