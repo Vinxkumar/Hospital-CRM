@@ -629,16 +629,14 @@ public class AdminServiceImp implements AdminService {
 
     }
 
-//    private Long pricePer;
-//
-//    private Long inStock;
-//
-//    private String manufacturer;
-//
-//    private LocalDateTime manufacturedAt;
-//
-//    private LocalDateTime expireAt;
-
+    @Override
+    public KeyMetricsResponse keyMetricsResponse() {
+        return new KeyMetricsResponse(
+                medicineRepository.count(),
+                patientRepository.count(),
+                doctorRepository.count()
+        );
+    }
 
     // mappers List
 
