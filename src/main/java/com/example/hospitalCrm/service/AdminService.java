@@ -2,6 +2,7 @@ package com.example.hospitalCrm.service;
 
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorRequest;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorResponse;
+import com.example.hospitalCrm.dtos.KeyMetricsResponse;
 import com.example.hospitalCrm.dtos.MedicineDto.AddMedicineRequest;
 import com.example.hospitalCrm.dtos.MedicineDto.MedicineResponse;
 import com.example.hospitalCrm.dtos.MedicineInventoryDto.UpdateInventoryRequest;
@@ -14,9 +15,9 @@ import java.util.List;
 
 public interface AdminService {
     UserResponse createNewAdminUser(UserRequest userRequest);
-    DoctorResponse createNewDoctor( DoctorRequest doctorRequest);
-    UserResponse createNewPharma(UserRequest userRequest);
-    PatientResponse createNewPatient(PatientRequest patientRequest);
+    DoctorResponse createNewDoctor(Long adminId, DoctorRequest doctorRequest);
+    UserResponse createNewPharma(Long admId, UserRequest userRequest);
+    PatientResponse createNewPatient(Long adminId, PatientRequest patientRequest);
 
     UserResponse fetchByAdminUserId(Long id);
     DoctorResponse fetchByDoctorId(Long id);
@@ -44,4 +45,6 @@ public interface AdminService {
     List<MedicineResponse> fetchAllMedicine(Long adminId);
     void removeMedicine(Long adminId, Long medicineId);
     void removeAllMedicine(Long adminId);
+
+    KeyMetricsResponse keyMetricsResponse();
 }
