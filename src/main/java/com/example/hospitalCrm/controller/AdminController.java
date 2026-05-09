@@ -2,6 +2,7 @@ package com.example.hospitalCrm.controller;
 
 
 import com.example.hospitalCrm.configuration.GetCurrentUser;
+import com.example.hospitalCrm.dtos.AdminLogDto.LogResponse;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorRequest;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorResponse;
 import com.example.hospitalCrm.dtos.KeyMetricsResponse;
@@ -228,5 +229,10 @@ public class AdminController {
         return ResponseEntity.ok(adminService.keyMetricsResponse());
     }
 
+
+    @GetMapping("/log")
+    public ResponseEntity<List<LogResponse>> listOfLog() {
+        return ResponseEntity.ok(adminService.listAllLog(currentUser.getCurrentId()));
+    }
 
 }
