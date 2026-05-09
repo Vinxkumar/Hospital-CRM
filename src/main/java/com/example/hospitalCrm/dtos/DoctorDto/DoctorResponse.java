@@ -14,8 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 public class DoctorResponse {
 
-    String jwtToken;
-
     private String doctorName;
 
     private String doctorPhone;
