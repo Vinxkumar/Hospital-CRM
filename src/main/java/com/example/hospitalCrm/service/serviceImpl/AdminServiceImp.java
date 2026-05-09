@@ -126,7 +126,6 @@ public class AdminServiceImp implements AdminService {
         addLog(adminId, "Added New Doctor '" + newDoctor.getUser().getUserName() + "' in Department " + newDoctor.getDoctorDepartment());
 
         return new DoctorResponse(
-                token,
                 newDoctor.getUser().getUserName(),
                 newDoctor.getUser().getUserPhone(),
                 newDoctor.getDoctorAlternativePhone(),
@@ -203,14 +202,12 @@ public class AdminServiceImp implements AdminService {
 //            throw new RuntimeException("Failed to Create Patient Account for User:"+ patientRequest.getUser().getUserEmail());
 //        }
 
-        log.info("Generating Token for User: {}", patientRequest.getUser().getUserEmail());
 
         addLog(adminId, "Admitted New Patient with Id: " +newPatientEntity.getPatientId());
 
         log.info("Patient Account Created Successfully....!");
 
         return new PatientResponse(
-                token,
                 newPatient.getUserName(),
                 newPatient.getUserEmail(),
                 newPatient.getUserPhone(),
@@ -656,7 +653,6 @@ public class AdminServiceImp implements AdminService {
 
     protected  DoctorResponse mapToDoctorResponse(DoctorEntity doctor) {
         return new DoctorResponse(
-                "",
                 doctor.getUser().getUserName(),
                 doctor.getUser().getUserPhone(),
                 doctor.getDoctorAlternativePhone(),
@@ -669,7 +665,7 @@ public class AdminServiceImp implements AdminService {
 
     protected PatientResponse mapToPatientResponse(PatientEntity patient) {
         return new PatientResponse(
-                "",
+
                 patient.getUser().getUserName(),
                 patient.getUser().getUserEmail(),
                 patient.getUser().getUserPhone(),
@@ -734,6 +730,8 @@ public class AdminServiceImp implements AdminService {
                 doctorRepository.count()
         );
     }
+
+
 
     // mappers List
 
