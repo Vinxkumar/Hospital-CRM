@@ -722,12 +722,10 @@ public class AdminServiceImp implements AdminService {
 
     }
 
-    @Override
-    public KeyMetricsResponse keyMetricsResponse() {
-        return new KeyMetricsResponse(
-                medicineRepository.count(),
-                patientRepository.count(),
-                doctorRepository.count()
+    protected LogResponse mapToLogResponse(AdminLogEntity adminLog) {
+        return new LogResponse(
+                adminLog.getTimeStamp(),
+                adminLog.getLog()
         );
     }
 
@@ -758,4 +756,11 @@ public class AdminServiceImp implements AdminService {
                 medicine -> mapToMedicineResponse(medicine)
         ).toList();
     }
+
+    protected List<LogResponse> mapToLogResponseList(List<AdminLogEntity> adminLogEntities) {
+        return adminLogEntities.stream().map(
+                adminLog -> mapToLogResponse(adminLog)
+        ).toList();
+    }
+
 }
