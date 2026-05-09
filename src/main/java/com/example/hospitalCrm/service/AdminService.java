@@ -1,5 +1,6 @@
 package com.example.hospitalCrm.service;
 
+import com.example.hospitalCrm.dtos.AdminLogDto.LogResponse;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorRequest;
 import com.example.hospitalCrm.dtos.DoctorDto.DoctorResponse;
 import com.example.hospitalCrm.dtos.KeyMetricsResponse;
@@ -47,4 +48,7 @@ public interface AdminService {
     void removeAllMedicine(Long adminId);
 
     KeyMetricsResponse keyMetricsResponse();
+
+    LogResponse addLog(Long adminId, String log);
+    List<LogResponse> listAllLog(Long adminId);
 }
