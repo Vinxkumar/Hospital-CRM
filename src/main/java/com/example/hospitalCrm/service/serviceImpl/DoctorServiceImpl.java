@@ -40,7 +40,7 @@ public class DoctorServiceImpl implements DoctorService {
         final DoctorEntity savedDoc  = doctorRepository.save(doctor);
 
         return new DoctorResponse(
-                "",
+
                 savedDoc.getUser().getUserName(),
                 savedDoc.getUser().getUserPhone(),
                 savedDoc.getDoctorAlternativePhone(),
@@ -137,7 +137,6 @@ public class DoctorServiceImpl implements DoctorService {
         final DoctorEntity savedDoc = doctorRepository.save(doctor);
 
         return new DoctorResponse(
-                "",
                 savedDoc.getUser().getUserName(),
                 savedDoc.getUser().getUserPhone(),
                 savedDoc.getDoctorAlternativePhone(),
