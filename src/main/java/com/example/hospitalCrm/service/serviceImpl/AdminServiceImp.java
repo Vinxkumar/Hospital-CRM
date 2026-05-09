@@ -1,5 +1,6 @@
 package com.example.hospitalCrm.service.serviceImpl;
 
+import com.example.hospitalCrm.dtos.AdminLogDto.LogResponse;
 import com.example.hospitalCrm.dtos.KeyMetricsResponse;
 import com.example.hospitalCrm.dtos.MedicineDto.AddMedicineRequest;
 
@@ -45,6 +46,7 @@ public class AdminServiceImp implements AdminService {
     private final PharmaRepository pharmaRepository;
     private final MedicineRepository medicineRepository;
     private final MedicineInventoryRepository medicineInventoryRepository;
+    private final AdminLogRepository adminLogRepository;
 
     // Creating
 
@@ -69,6 +71,9 @@ public class AdminServiceImp implements AdminService {
                 .build());
 
         final String token = jwtUtil.generateToken(newAdmin);
+
+
+        addLog(newAdmin.getUserId(), "Added New Admin");
 
         return new UserResponse(
                 token,
@@ -118,7 +123,7 @@ public class AdminServiceImp implements AdminService {
 
         log.info("Doctor Account Create Successfully with Email: {}", newDoctor.getUser().getUserEmail());
 
-        final String token = jwtUtil.generateToken(newUser);
+        addLog(adminId, "Added New Doctor '" + newDoctor.getUser().getUserName() + "' in Department " + newDoctor.getDoctorDepartment());
 
         return new DoctorResponse(
                 token,
@@ -149,10 +154,10 @@ public class AdminServiceImp implements AdminService {
                 .userPhone(userRequest.getUserPhone())
                 .build());
 
-        final String token = jwtUtil.generateToken(newPharma);
+        addLog(adminId, "Created New Parma Staff ");
 
         return new UserResponse(
-                token,
+                "",
                 newPharma.getUserName(),
                 newPharma.getUserEmail(),
                 newPharma.getUserPhone(),
@@ -200,11 +205,7 @@ public class AdminServiceImp implements AdminService {
 
         log.info("Generating Token for User: {}", patientRequest.getUser().getUserEmail());
 
-        final String token = jwtUtil.generateToken(newPatient);
-
-        if(token == null || token.isEmpty()) {
-            throw new RuntimeException("Failed to Create Token for User: "+ patientRequest.getUser().getUserEmail());
-        }
+        addLog(adminId, "Admitted New Patient with Id: " +newPatientEntity.getPatientId());
 
         log.info("Patient Account Created Successfully....!");
 
@@ -254,6 +255,9 @@ public class AdminServiceImp implements AdminService {
         final MedicineEntity savedMedicine = medicineRepository.save(newMedicine);
         final MedicineInventory savedInventory = medicineInventoryRepository.save(inventory);
 
+
+        addLog(adminId, "Added New Medicine with Id: " + newMedicine.getMedicineId());
+
 //        if(savedInventory == null || savedMedicine == null)
         return mapToMedicineResponse(savedMedicine);
     }
@@ -264,6 +268,9 @@ public class AdminServiceImp implements AdminService {
     public UserResponse fetchByAdminUserId(Long id) {
         log.info("Fetching Admin User By Id");
         UserProject userProject =  userRepository.findByUserRole(id, Role.ADMIN);
+
+        addLog(id, "Fetched Admin with Id: " + id);
+
         return new UserResponse(
                 "",
                 userProject.getUserName(),
@@ -276,7 +283,8 @@ public class AdminServiceImp implements AdminService {
 
     @Override
     public DoctorResponse fetchByDoctorId(Long id) {
-        log.info("Fetcginh Doctor by Id: {}", id);
+        log.info("Fetching Doctor by Id: {}", id);
+
         return mapToDoctorResponse(doctorRepository.findById(id).orElseThrow(()-> new UsernameNotFoundException("User Not Found")));
     }
 
@@ -310,6 +318,8 @@ public class AdminServiceImp implements AdminService {
 
         final MedicineEntity medicine = medicineRepository.findById(medicineId).orElseThrow(() -> new IllegalArgumentException("Medicine Not Found by Id: "+ medicineId));
 
+        addLog(adminId, "Fetched Medicine with Id: "+ medicineId);
+
         return mapToMedicineResponse(medicine);
     }
 
@@ -324,6 +334,8 @@ public class AdminServiceImp implements AdminService {
         }
 
         log.info("Fetching All Medicines");
+
+        addLog(adminId, "Fetched All Medicine");
 
         return mapToMedicineResponseList(medicineRepository.findAll());
     }
@@ -419,6 +431,8 @@ public class AdminServiceImp implements AdminService {
 
         final MedicineEntity updatedMedicine = medicineRepository.save(oldMedicine);
 
+        addLog(adminId, "Updated Inventory of Medicine with Id: "+ medicineId);
+
         return mapToMedicineResponse(updatedMedicine);
 
     }
@@ -499,7 +513,9 @@ public class AdminServiceImp implements AdminService {
 
         medicineRepository.deleteById(medicineId);
 
-        log.info("Sucessufully Deleted Medicine with Id: {} by Admin with Id: {}", medicineId, adminId);
+        addLog(adminId, "Deleted Medicine with Id: "+ medicineId);
+
+        log.info("Successfully Deleted Medicine with Id: {} by Admin with Id: {}", medicineId, adminId);
 
 
     }
@@ -514,7 +530,7 @@ public class AdminServiceImp implements AdminService {
         }
 
         log.warn("Deleting all Medicine by Admin with Id: {}", adminId);
-
+        addLog(adminId, "Removed All Medicine");
         medicineRepository.deleteAll();
     }
 
@@ -546,6 +562,84 @@ public class AdminServiceImp implements AdminService {
         log.warn("Deleting All Patient Accounts..!");
         patientRepository.deleteAll();
     }
+
+    @Override
+    public KeyMetricsResponse keyMetricsResponse() {
+        return new KeyMetricsResponse(
+                medicineRepository.count(),
+                patientRepository.count(),
+                doctorRepository.count()
+        );
+    }
+
+
+    @Transactional
+    @Override
+    public LogResponse addLog(Long adminId, String log) {
+
+        final AdminLogEntity newLog = adminLogRepository.save(AdminLogEntity.builder()
+                .adminId(adminId)
+                .Log(log)
+                .build()
+        );
+
+        return LogResponse.builder()
+                .timeStamp(newLog.getTimeStamp())
+                .log(newLog.getLog())
+                .build();
+    }
+
+
+    @Override
+    public List<LogResponse> listAllLog(Long adminId) {
+        return mapToLogResponseList(adminLogRepository.findByAdminId(adminId));
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
