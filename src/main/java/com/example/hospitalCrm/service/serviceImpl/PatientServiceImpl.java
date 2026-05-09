@@ -58,7 +58,6 @@ public class PatientServiceImpl implements PatientService {
         final PatientEntity updatedPatient = patientRepository.save(patient);
 
         return new PatientResponse(
-                "",
                 updatedPatient.getUser().getUserName(),
                 updatedPatient.getUser().getUserEmail(),
                 updatedPatient.getUser().getUserPhone(),
