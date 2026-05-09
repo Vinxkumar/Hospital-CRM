@@ -20,6 +20,9 @@ public class PatientServiceImpl implements PatientService {
 
     private final PatientRepository patientRepository;
 
+    private final AppointmentServiceImpl appointmentService;
+    private final PrescriptionServiceImpl prescriptionService;
+
     @Transactional
     @Override
     public PatientResponse updatePatient(Long patientId, PatientUpdateRequest patientUpdateRequest) {
@@ -63,8 +66,8 @@ public class PatientServiceImpl implements PatientService {
                 updatedPatient.getPatientBloodGroup(),
                 updatedPatient.getPatientAddress(),
                 //TODO: Have to change to respective responses
-                List.of(),  //appointments
-                List.of(),  // prescription
+                appointmentService.listAllAppointments(updatedPatient.getPatientId()),
+                prescriptionService.fetchAllByPatientId(updatedPatient.getPatientId()),
                 List.of()  // certificates
 
         );
