@@ -68,7 +68,6 @@ public class PatientServiceImpl implements PatientService {
                 appointmentService.listAllAppointments(updatedPatient.getPatientId()),
                 prescriptionService.fetchAllByPatientId(updatedPatient.getPatientId()),
                 List.of()  // certificates
-
         );
     }
 }
