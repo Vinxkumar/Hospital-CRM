@@ -2,6 +2,8 @@ package com.example.hospitalCrm.configuration;
 
 
 import com.example.hospitalCrm.entity.UsersEntity;
+import com.example.hospitalCrm.respository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.Authentication;
@@ -10,7 +12,10 @@ import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class GetCurrentUser {
+
+    private final UserRepository userRepository;
 
     public Long getCurrentId() {
 
@@ -22,7 +27,7 @@ public class GetCurrentUser {
             log.error("Filter Chain: No current User Found");
         }
         assert auth != null;
-        UsersEntity user = (UsersEntity) auth.getPrincipal();
+        UsersEntity user = userRepository.findByUserEmail((String) auth.getPrincipal());
 
         if(user == null) {
             log.error("Filter Chain: User Doesn't Exists");
