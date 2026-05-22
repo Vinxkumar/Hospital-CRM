@@ -14,6 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class MedicineResponse {
 
+    private Long medicineId;
+
     private String medicineFullName;
 
     private List<MedicineCategory> medicineCategories;
