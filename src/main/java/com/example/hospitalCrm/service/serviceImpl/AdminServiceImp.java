@@ -702,6 +702,7 @@ public class AdminServiceImp implements AdminService {
 
     protected MedicineResponse mapToMedicineResponse(MedicineEntity medicine) {
         return new MedicineResponse(
+                medicine.getMedicineId(),
                 medicine.getMedicineFullName(),
                 medicine.getCategory(),
                 medicine.getStrengthMg_Ml(),
